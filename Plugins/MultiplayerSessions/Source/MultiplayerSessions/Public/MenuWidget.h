@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interfaces/OnlineSessionInterface.h"
+
 #include "MenuWidget.generated.h"
 
 class UButton;
 class UMultiplayerSessionsSubsystem;
 /**
  * 
- */
+ */	
 UCLASS()
 class MULTIPLAYERSESSIONS_API UMenuWidget : public UUserWidget
 {
@@ -19,7 +21,7 @@ class MULTIPLAYERSESSIONS_API UMenuWidget : public UUserWidget
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void MenuSetup(int32 NumberOfPublicConnections = 4, FString TypeOfMatch = FString(TEXT("FreeForAll")));
+	void MenuSetup(int32 NumberOfPublicConnections = 4, FString TypeOfMatch = FString(TEXT("FreeForAll")), FString LobbyPath = FString("/Game/Maps/Lobby"));
 
 protected:
 
@@ -31,6 +33,13 @@ protected:
 	//
 	UFUNCTION()
 	void OnCreateSession(bool bWasSuccessful);
+	void OnFindSessions(const TArray<FOnlineSessionSearchResult>& SearchResult, bool bWasSuccessful);
+	void OnJoinSession(EOnJoinSessionCompleteResult::Type Result);
+	UFUNCTION()
+	void OnDestroySession(bool bWasSuccessful);
+	UFUNCTION()
+	void OnStartSession(bool bWasSuccessful);
+
 
 private:
 
@@ -54,4 +63,5 @@ private:
 
 	int32 NumPublicConnections{4};
 	FString MatchType{TEXT("FreeForAll")};
+	FString PathToLobby{ TEXT("") };
 };
